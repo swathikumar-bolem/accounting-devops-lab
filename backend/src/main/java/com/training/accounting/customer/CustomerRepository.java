@@ -1,0 +1,1 @@
+package com.training.accounting.customer; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface CustomerRepository extends JpaRepository<Customer,Long>{List<Customer> findByBusinessIdOrderByIdDesc(Long b);Optional<Customer> findByIdAndBusinessId(Long id,Long b);long countByBusinessId(Long b);}

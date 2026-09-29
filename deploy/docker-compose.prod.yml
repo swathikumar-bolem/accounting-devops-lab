@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [app_net]
+  backend:
+    image: ${DOCKERHUB_USERNAME}/accounting-backend:${BACKEND_TAG}
+    restart: unless-stopped
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      BUSINESS_NAME: ${BUSINESS_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [app_net]
+  frontend:
+    FRONT_image: ${DOCKERHUB_USERNAME}/accounting-backend:${BACKEND_TAG}
+    restart: unless-stopped
+    depends_on: [backend]
+    ports: ["80:80"]
+    networks: [app_net]
+volumes: {postgres_data: {}}
+networks: {app_net: {driver: bridge}}
