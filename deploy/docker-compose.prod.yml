@@ -31,10 +31,11 @@ services:
         condition: service_healthy
     networks: [app_net]
   frontend:
-    FRONT_image: ${DOCKERHUB_USERNAME}/accounting-backend:${BACKEND_TAG}
+    image: ${DOCKERHUB_USERNAME}/accounting-frontend:${FRONTEND_TAG}
     restart: unless-stopped
     depends_on: [backend]
     ports: ["80:80"]
     networks: [app_net]
+
 volumes: {postgres_data: {}}
 networks: {app_net: {driver: bridge}}
