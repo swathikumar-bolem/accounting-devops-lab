@@ -1,31 +1,34 @@
-# Accounting Real-World Starter
+# Fuworx Accounting & Business Management MVP
 
-Functional lab application for the full DevOps flow.
+Dockerized React + Nginx + Spring Boot + PostgreSQL modular-monolith application used for the Fuworx MVP and DevOps release practice.
 
-Includes:
-- React frontend served by Nginx
-- Spring Boot backend
-- JWT login
-- PostgreSQL
-- Flyway migrations
-- Customer create/list/delete flow
-- Named Docker volume
-- Local build Compose file
-- Pull-only production Compose file
-- Jenkinsfile starter
+## Current grouped release
+Release candidate: **1.1.0 - Core sales workspace**
 
-Default lab login: `admin@example.com` / `Admin@123`
+Implemented:
+- JWT login and business isolation
+- Professional admin application shell/dashboard
+- Customer management and customer workspace
+- Transactions: sale, purchase, expense, payment, receipt, journal
+- Invoices with multiple line items, GST rates, paid/outstanding status
+- Flyway schema migrations
+- Local Docker Compose build deployment
+- Pull-only production Docker Compose deployment
 
-Local build/run:
+See `BATCHES.md` for the remaining grouped releases.
+
+## Local/UAT startup
 ```bash
 cp .env.example .env
+# edit .env
 docker compose -f docker-compose.local.yml build
 docker compose -f docker-compose.local.yml up -d
+docker compose -f docker-compose.local.yml ps
 ```
 
-Production-like host:
-```bash
-cp .env.example .env
-docker compose --env-file .env -f docker-compose.prod.yml pull
-docker compose --env-file .env -f docker-compose.prod.yml up -d
-```
+Open `http://<server-ip>`.
+
+Lab bootstrap login defaults to `admin@example.com` / `Admin@123`; change these outside the lab.
+
+## Production principle
+Production uses `deploy/docker-compose.prod.yml`, which contains only `image:` references for application services. Images are built/tested in CI/UAT and pulled into production by version tag.

@@ -13,6 +13,7 @@ services:
       timeout: 5s
       retries: 5
     networks: [app_net]
+
   backend:
     image: ${DOCKERHUB_USERNAME}/accounting-backend:${BACKEND_TAG}
     restart: unless-stopped
@@ -30,6 +31,7 @@ services:
       postgres:
         condition: service_healthy
     networks: [app_net]
+
   frontend:
     image: ${DOCKERHUB_USERNAME}/accounting-frontend:${FRONTEND_TAG}
     restart: unless-stopped
